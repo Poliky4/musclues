@@ -38,21 +38,11 @@ const totalHeight = sum([
 const createScene = function() {
   const scene = new b.Scene(engine)
 
-  const mat_transparent = new b.StandardMaterial
-    ("mat_transparent", scene)
+  const mat_transparent =
+    new b.StandardMaterial(
+      "mat_transparent", scene)
   mat_transparent.alpha = 0.5
-  const mat_bone = new b.StandardMaterial
-    ("mat_bone", scene)
-  mat_bone.diffuseColor = new b.Color3.Red()
 
-  /*
-  const camera = new b.FollowCamera(
-    'camera',
-    new b.Vector3(0, 15, -40),
-    scene
-  )
-  camera.attachControl(canvas, true)
-  */
   const camera = new b.ArcRotateCamera(
     'camera',
     0, 0, 10,
@@ -72,32 +62,6 @@ const createScene = function() {
     scene
   )
 
-  const skeleton = new b.Skeleton(
-    "skeleton",
-    "skeleton",
-    scene
-  )
-
-  const torso_bone = new b.Bone(
-    "torso_bone",
-    skeleton,
-  )
-  const torso_bone_fake = b.MeshBuilder.CreateBox(
-    "torso_bone_fake",
-    {
-      height: torso_height,
-      width: 0.1,
-      depth: 0.1
-    }
-  )
-  torso_bone_fake.material = mat_bone
-  torso_bone_fake.position.y = (
-    2 +
-    torso_height / 2 +
-    foot_height +
-    lower_leg_height +
-    upper_leg_height
-  )
   const torso = b.MeshBuilder.CreateBox(
     "torso",
     {
@@ -149,24 +113,6 @@ const createScene = function() {
     + neck_height
   )
 
-  const upper_leg_l_bone_fake = b.MeshBuilder.CreateBox(
-    "upper_leg_l_bone_fake",
-    {
-      height: upper_leg_height,
-      width: 0.1,
-      depth: 0.1
-    }
-  )
-  upper_leg_l_bone_fake.material = mat_bone
-  upper_leg_l_bone_fake.parent = torso_bone_fake
-  upper_leg_l_bone_fake.position.x = (
-    torso_width / 2
-    - 1
-  )
-  upper_leg_l_bone_fake.position.y = -(
-    torso_height
-    - 1
-  )
   const upper_leg_l = b.MeshBuilder.CreateBox(
     "upper_leg_l",
     {
@@ -185,22 +131,19 @@ const createScene = function() {
   upper_leg_l.position.y = -(
     torso_height
     - 1
+    -upper_leg_height / 2
+  )
+  upper_leg_l.rotation.x = 45
+  upper_leg_l.rotation.y = -45
+  upper_leg_l.setPivotMatrix(
+    b.Matrix.Translation(
+      0,
+      -upper_leg_height / 2,
+      0,
+    ),
+    false
   )
 
-  const lower_leg_l_bone_fake = b.MeshBuilder.CreateBox(
-    "lower_leg_l_bone_fake",
-    {
-      height: lower_leg_height,
-      width: 0.1,
-      depth: 0.1
-    }
-  )
-  lower_leg_l_bone_fake.material = mat_bone
-  lower_leg_l_bone_fake.parent = upper_leg_l_bone_fake
-  lower_leg_l_bone_fake.position.y = -(
-    upper_leg_height
-    + 0.5
-  )
   const lower_leg_l = b.MeshBuilder.CreateBox(
     "lower_leg_l",
     {
@@ -215,6 +158,16 @@ const createScene = function() {
   lower_leg_l.position.y = -(
     upper_leg_height
     + 0.5
+    - lower_leg_height / 2
+  )
+  lower_leg_l.rotation.x = -45
+  lower_leg_l.setPivotMatrix(
+    b.Matrix.Translation(
+      0,
+      -lower_leg_height / 2,
+      0,
+    ),
+    false
   )
 
   const foot_l = b.MeshBuilder.CreateBox(
@@ -234,24 +187,6 @@ const createScene = function() {
     + 1
   )
 
-  const upper_leg_r_bone_fake = b.MeshBuilder.CreateBox(
-    "upper_leg_r_bone_fake",
-    {
-      height: upper_leg_height,
-      width: 0.1,
-      depth: 0.1
-    }
-  )
-  upper_leg_r_bone_fake.material = mat_bone
-  upper_leg_r_bone_fake.parent = torso_bone_fake
-  upper_leg_r_bone_fake.position.x = -(
-    torso_width / 2
-    - 1
-  )
-  upper_leg_r_bone_fake.position.y = -(
-    torso_height
-    - 1
-  )
   const upper_leg_r = b.MeshBuilder.CreateBox(
     "upper_leg_r",
     {
@@ -270,22 +205,19 @@ const createScene = function() {
   upper_leg_r.position.y = -(
     torso_height
     - 1
+    - upper_leg_height / 2
+  )
+  upper_leg_r.rotation.x = 45
+  upper_leg_r.rotation.y = 45
+  upper_leg_r.setPivotMatrix(
+    b.Matrix.Translation(
+      0,
+      -upper_leg_height / 2,
+      0,
+    ),
+    false
   )
 
-  const lower_leg_r_bone_fake = b.MeshBuilder.CreateBox(
-    "lower_leg_r_bone_fake",
-    {
-      height: lower_leg_height,
-      width: 0.1,
-      depth: 0.1
-    }
-  )
-  lower_leg_r_bone_fake.material = mat_bone
-  lower_leg_r_bone_fake.parent = upper_leg_r_bone_fake
-  lower_leg_r_bone_fake.position.y = -(
-    upper_leg_height
-    + 0.5
-  )
   const lower_leg_r = b.MeshBuilder.CreateBox(
     "lower_leg_r",
     {
@@ -300,6 +232,16 @@ const createScene = function() {
   lower_leg_r.position.y = -(
     upper_leg_height
     + 0.5
+    - lower_leg_height / 2
+  )
+  lower_leg_r.rotation.x = -45
+  lower_leg_r.setPivotMatrix(
+    b.Matrix.Translation(
+      0,
+      -lower_leg_height / 2,
+      0,
+    ),
+    false
   )
 
   const foot_r = b.MeshBuilder.CreateBox(
@@ -319,25 +261,6 @@ const createScene = function() {
     + 1
   )
 
-  const upper_arm_l_bone_fake = b.MeshBuilder.CreateBox(
-    "upper_arm_l_bone_fake",
-    {
-      height: 0.1,
-      width: upper_arm_height,
-      depth: 0.1
-    }
-  )
-  upper_arm_l_bone_fake.material = mat_bone
-  upper_arm_l_bone_fake.parent = torso_bone_fake
-  upper_arm_l_bone_fake.position.y = (
-    torso_height / 2
-    - 0.75
-  )
-  upper_arm_l_bone_fake.position.x = (
-    torso_width / 2
-    + upper_arm_height / 2
-    + 0.5
-  )
   const upper_arm_l = b.MeshBuilder.CreateBox(
     "upper_arm_l",
     {
@@ -357,22 +280,18 @@ const createScene = function() {
     torso_width / 2
     + upper_arm_height / 2
     + 0.5
+    - upper_arm_height / 2
+  )
+  upper_arm_l.rotation.y = 45
+  upper_arm_l.setPivotMatrix(
+    b.Matrix.Translation(
+      upper_arm_height / 2,
+      0,
+      0,
+    ),
+    false
   )
 
-  const lower_arm_l_bone_fake = b.MeshBuilder.CreateBox(
-    "lower_arm_l_bone_fake",
-    {
-      height: 0.1,
-      width: lower_arm_height,
-      depth: 0.1
-    }
-  )
-  lower_arm_l_bone_fake.material = mat_bone
-  lower_arm_l_bone_fake.parent = upper_arm_l_bone_fake
-  lower_arm_l_bone_fake.position.x = (
-    upper_arm_height
-    + 0.5
-  )
   const lower_arm_l = b.MeshBuilder.CreateBox
   (
     "lower_arm_l",
@@ -388,6 +307,16 @@ const createScene = function() {
   lower_arm_l.position.x = (
     upper_arm_height
     + 0.5
+    - lower_arm_height / 2
+  )
+  lower_arm_l.rotation.y = 45
+  lower_arm_l.setPivotMatrix(
+    b.Matrix.Translation(
+      lower_arm_height / 2,
+      0,
+      0,
+    ),
+    false
   )
 
   const hand_l = b.MeshBuilder.CreateBox(
@@ -407,25 +336,6 @@ const createScene = function() {
     - 1.5
   )
 
-  const upper_arm_r_bone_fake = b.MeshBuilder.CreateBox(
-    "upper_arm_r_bone_fake",
-    {
-      height: 0.1,
-      width: upper_arm_height,
-      depth: 0.1
-    }
-  )
-  upper_arm_r_bone_fake.material = mat_bone
-  upper_arm_r_bone_fake.parent = torso_bone_fake
-  upper_arm_r_bone_fake.position.y = (
-    torso_height / 2
-    - 0.75
-  )
-  upper_arm_r_bone_fake.position.x = -(
-    torso_width / 2
-    + upper_arm_height / 2
-    + 0.5
-  )
   const upper_arm_r = b.MeshBuilder.CreateBox(
     "upper_arm_r",
     {
@@ -443,24 +353,18 @@ const createScene = function() {
   )
   upper_arm_r.position.x = -(
     torso_width / 2
-    + upper_arm_height / 2
     + 0.5
+  )
+  upper_arm_r.rotation.z = 45
+  upper_arm_r.setPivotMatrix(
+    b.Matrix.Translation(
+      -upper_arm_height / 2,
+      0,
+      0,
+    ),
+    false
   )
 
-  const lower_arm_r_bone_fake = b.MeshBuilder.CreateBox(
-    "lower_arm_r_bone_fake",
-    {
-      height: 0.1,
-      width: lower_arm_height,
-      depth: 0.1
-    }
-  )
-  lower_arm_r_bone_fake.material = mat_bone
-  lower_arm_r_bone_fake.parent = upper_arm_r_bone_fake
-  lower_arm_r_bone_fake.position.x = -(
-    upper_arm_height
-    + 0.5
-  )
   const lower_arm_r = b.MeshBuilder.CreateBox(
     "lower_arm_r",
     {
@@ -475,6 +379,16 @@ const createScene = function() {
   lower_arm_r.position.x = -(
     upper_arm_height
     + 0.5
+    - lower_arm_height / 2
+  )
+  lower_arm_r.rotation.z = 45
+  lower_arm_r.setPivotMatrix(
+    b.Matrix.Translation(
+      -lower_arm_height / 2,
+      0,
+      0,
+    ),
+    false
   )
 
   const hand_r = b.MeshBuilder.CreateBox(
