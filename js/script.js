@@ -477,12 +477,29 @@ function makeDude(scene) {
   const animationDurationMs = 300
   const frames = (FPS/1000) * animationDurationMs
   const frameDuration = animationDurationMs/frames
-  const applyPose = (pose) => {
-    const from = getCurrentPose()
-    const steps = Array(frames).fill().map((_, i) => {
+  const playAnimation = (to, from) => {
+    if (!from) from = getCurrentPose()
+
+    const steps = getSteps(from, to, frames)
+    playSteps(steps, frames, frameDuration)
+  }
+  function applyPose(pose) {
+    Object.entries(pose).forEach(([name, rotation]) => {
+      setRotationMesh(name, rotation)
+    })
+  }
+  function playSteps(steps, frames, frameDuration) {
+    let i = 0
+    const intervalId = setInterval(() => {
+      applyPose(steps[i++])
+      if(i === frames) clearInterval(intervalId)
+    }, frameDuration)
+  }
+  function getSteps(from, to, frames) {
+    return Array(frames).fill().map((_, i) => {
       const step = {}
-      
-      Object.entries(pose).forEach(([name, rotation]) => {
+
+      Object.entries(to).forEach(([name, rotation]) => {
         step[name] = {
           x: getStep(from[name].x, rotation.x, i+1) ?? from[name].x,
           y: getStep(from[name].y, rotation.y, i+1) ?? from[name].y,
@@ -492,15 +509,6 @@ function makeDude(scene) {
 
       return step
     })
-    
-    let i = 0
-    const intervalId = setInterval(() => {
-      Object.entries(steps[i++]).forEach(([name, rotation]) => {
-        setRotationMesh(name, rotation)
-      })
-
-      if(i === frames) clearInterval(intervalId)
-    }, frameDuration)
   }
   function getStep(from, to, i) {
     const difference = (to ?? 0) - from
@@ -527,16 +535,21 @@ function makeDude(scene) {
   }
 
   const poses = makePoses()
-  let flip = true
-  setInterval(() => {
-    if(flip) applyPose(poses.zero)
-    else applyPose(poses.rest)
-    flip = !flip
-  }, 1000)
+  repeatReverse(poses.zero, poses.rest)
+
+  function repeatReverse(start, end) {
+    let flip = true
+    setInterval(() => {
+      if(flip) playAnimation(start)
+      else playAnimation(end)
+      flip = !flip
+    }, 1000)
+  }
 
   return {
     dude: torso,
-    applyPose
+    applyPose,
+    playAnimation
   }
 }
 
