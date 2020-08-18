@@ -12,11 +12,11 @@ const engine = new b.Engine(
 )
 
 const foot_height = 1
-const lower_leg_height = 5
-const upper_leg_height = 5
-const torso_height = 8
+const lower_leg_height = 6
+const upper_leg_height = 6
+const torso_height = 10
 const torso_width = 6
-const neck_height = 1
+const neck_height = 0.5
 const head_height = 4
 const upper_arm_height = 4
 const lower_arm_height = 4
@@ -35,13 +35,25 @@ const totalHeight = sum([
   head_height
 ])
 
-const createScene = function() {
-  const scene = new b.Scene(engine)
+// <Init>
+const mats = {}
+const scene = createScene()
 
-  const mat_transparent =
-    new b.StandardMaterial(
-      "mat_transparent", scene)
-  mat_transparent.alpha = 0.5
+engine.runRenderLoop(() => {
+  scene.render()
+})
+
+window.addEventListener("resize", () => {
+  engine.resize()
+})
+// </Init>
+
+function createScene() {
+  const scene = new b.Scene(engine)
+  // scene.debugLayer.show()
+
+  mats.transparent = makeTransparentMaterial(scene)
+  mats.origin = makeOriginMaterial(scene)
 
   const camera = new b.ArcRotateCamera(
     'camera',
@@ -62,6 +74,49 @@ const createScene = function() {
     scene
   )
 
+  const dude = makeDude(scene)
+  camera.lockTarget = dude
+
+  return scene
+}
+
+function makeTransparentMaterial(scene) {
+  const mat =
+    new b.StandardMaterial(
+      "mat_transparent", scene)
+  mat.alpha = 0.5
+  
+  return mat
+}
+
+function makeOriginMaterial(scene) {
+  const mat =
+  new b.StandardMaterial(
+    "mat_origin", scene)
+  mat.diffuseColor = b.Color3.Red()
+  mat.alpha = 0
+
+  return mat
+}
+
+function makeDude(scene) {
+  const origin = b.MeshBuilder.CreateBox(
+    "origin",
+    {
+      height: 0.01,
+      width: 0.01,
+      depth: 0.01,
+    },
+    scene
+  )
+  origin.material = mats.origin
+  origin.position.y = (
+    foot_height
+    + lower_leg_height
+    + upper_leg_height
+    + padding * 3
+  )
+
   const torso = b.MeshBuilder.CreateBox(
     "torso",
     {
@@ -71,31 +126,32 @@ const createScene = function() {
     },
     scene
   )
-  torso.material = mat_transparent
-  torso.position.y = (
-    2 +
-    torso_height / 2 +
-    foot_height +
-    lower_leg_height +
-    upper_leg_height
+  torso.parent = origin
+  torso.material = mats.transparent
+  torso.setPivotMatrix(
+    b.Matrix.Translation(
+      0,
+      torso_height / 2,
+      0,
+    ),
+    false
   )
-  camera.lockTarget = torso
 
   const neck = b.MeshBuilder.CreateBox
   (
     "neck",
     {
       height: neck_height,
-      width: 2,
-      depth: 2
+      width: 1,
+      depth: 1
     },
     scene
   )
-  neck.material = mat_transparent
+  neck.material = mats.transparent
   neck.parent = torso
   neck.position.y = (
     torso_height / 2
-    + neck_height
+    + neck_height / 2
   )
 
   const head = b.Mesh.CreateSphere(
@@ -106,11 +162,11 @@ const createScene = function() {
     false, 
     BABYLON.Mesh.FRONTSIDE
   )
-  head.material = mat_transparent
+  head.material = mats.transparent
   head.parent = neck
   head.position.y = (
     head_height / 2
-    + neck_height
+    + neck_height / 2
   )
 
   const upper_leg_l = b.MeshBuilder.CreateBox(
@@ -122,19 +178,15 @@ const createScene = function() {
     },
     scene
   )
-  upper_leg_l.material = mat_transparent
-  upper_leg_l.parent = torso
+  upper_leg_l.material = mats.transparent
+  upper_leg_l.parent = origin
   upper_leg_l.position.x = (
     torso_width / 2
     - 1
   )
   upper_leg_l.position.y = -(
-    torso_height
-    - 1
-    -upper_leg_height / 2
+    padding
   )
-  upper_leg_l.rotation.x = 45
-  upper_leg_l.rotation.y = -45
   upper_leg_l.setPivotMatrix(
     b.Matrix.Translation(
       0,
@@ -153,14 +205,13 @@ const createScene = function() {
     },
     scene
   )
-  lower_leg_l.material = mat_transparent
+  lower_leg_l.material = mats.transparent
   lower_leg_l.parent = upper_leg_l
   lower_leg_l.position.y = -(
     upper_leg_height
     + 0.5
     - lower_leg_height / 2
   )
-  lower_leg_l.rotation.x = -45
   lower_leg_l.setPivotMatrix(
     b.Matrix.Translation(
       0,
@@ -179,7 +230,7 @@ const createScene = function() {
     },
     scene
   ) 
-  foot_l.material = mat_transparent
+  foot_l.material = mats.transparent
   foot_l.parent = lower_leg_l
   foot_l.position.z = -1.5
   foot_l.position.y = -(
@@ -196,19 +247,15 @@ const createScene = function() {
     },
     scene
   )
-  upper_leg_r.material = mat_transparent
-  upper_leg_r.parent = torso
+  upper_leg_r.material = mats.transparent
+  upper_leg_r.parent = origin
   upper_leg_r.position.x = -(
     torso_width / 2
     - 1
   )
   upper_leg_r.position.y = -(
-    torso_height
-    - 1
-    - upper_leg_height / 2
+    padding
   )
-  upper_leg_r.rotation.x = 45
-  upper_leg_r.rotation.y = 45
   upper_leg_r.setPivotMatrix(
     b.Matrix.Translation(
       0,
@@ -227,14 +274,13 @@ const createScene = function() {
     },
     scene
   )
-  lower_leg_r.material = mat_transparent
+  lower_leg_r.material = mats.transparent
   lower_leg_r.parent = upper_leg_r
   lower_leg_r.position.y = -(
     upper_leg_height
     + 0.5
     - lower_leg_height / 2
   )
-  lower_leg_r.rotation.x = -45
   lower_leg_r.setPivotMatrix(
     b.Matrix.Translation(
       0,
@@ -253,7 +299,7 @@ const createScene = function() {
     },
     scene
   ) 
-  foot_r.material = mat_transparent
+  foot_r.material = mats.transparent
   foot_r.parent = lower_leg_r
   foot_r.position.z = -1.5
   foot_r.position.y = -(
@@ -270,7 +316,7 @@ const createScene = function() {
     },
     scene
   )
-  upper_arm_l.material = mat_transparent
+  upper_arm_l.material = mats.transparent
   upper_arm_l.parent = torso
   upper_arm_l.position.y = (
     torso_height / 2
@@ -282,7 +328,6 @@ const createScene = function() {
     + 0.5
     - upper_arm_height / 2
   )
-  upper_arm_l.rotation.y = 45
   upper_arm_l.setPivotMatrix(
     b.Matrix.Translation(
       upper_arm_height / 2,
@@ -302,14 +347,13 @@ const createScene = function() {
     },
     scene
   )
-  lower_arm_l.material = mat_transparent
+  lower_arm_l.material = mats.transparent
   lower_arm_l.parent = upper_arm_l
   lower_arm_l.position.x = (
     upper_arm_height
     + 0.5
     - lower_arm_height / 2
   )
-  lower_arm_l.rotation.y = 45
   lower_arm_l.setPivotMatrix(
     b.Matrix.Translation(
       lower_arm_height / 2,
@@ -328,7 +372,7 @@ const createScene = function() {
     },
     scene
   )
-  hand_l.material = mat_transparent
+  hand_l.material = mats.transparent
   hand_l.parent = lower_arm_l
   hand_l.position.x = (
     lower_arm_height
@@ -345,7 +389,7 @@ const createScene = function() {
     },
     scene
   )
-  upper_arm_r.material = mat_transparent
+  upper_arm_r.material = mats.transparent
   upper_arm_r.parent = torso
   upper_arm_r.position.y = (
     torso_height / 2
@@ -355,7 +399,6 @@ const createScene = function() {
     torso_width / 2
     + 0.5
   )
-  upper_arm_r.rotation.z = 45
   upper_arm_r.setPivotMatrix(
     b.Matrix.Translation(
       -upper_arm_height / 2,
@@ -374,14 +417,13 @@ const createScene = function() {
     },
     scene
   )
-  lower_arm_r.material = mat_transparent
+  lower_arm_r.material = mats.transparent
   lower_arm_r.parent = upper_arm_r
   lower_arm_r.position.x = -(
     upper_arm_height
     + 0.5
     - lower_arm_height / 2
   )
-  lower_arm_r.rotation.z = 45
   lower_arm_r.setPivotMatrix(
     b.Matrix.Translation(
       -lower_arm_height / 2,
@@ -400,7 +442,7 @@ const createScene = function() {
     },
     scene
   )
-  hand_r.material = mat_transparent
+  hand_r.material = mats.transparent
   hand_r.parent = lower_arm_r
   hand_r.position.x = -(
     lower_arm_height
@@ -408,15 +450,136 @@ const createScene = function() {
     - 1.5
   )
 
-  return scene
+  const meshMap = {
+    torso: torso,
+    shoulder_l: upper_arm_l,
+    elbow_l: lower_arm_l,
+    shoulder_r: upper_arm_r,
+    elbow_r: lower_arm_r,
+    hip_r: upper_leg_r,
+    knee_r: lower_leg_r,
+    hip_l: upper_leg_l,
+    knee_l: lower_leg_l,
+  }
+
+  const rotateMesh = (meshName, rotation) => {
+    if (!meshMap[meshName]) return console.warn("Unknown mesh:", meshName)
+    rotate(meshMap[meshName], rotation)
+  }
+  window.rotateMesh = rotateMesh
+  const setRotationMesh = (meshName, rotation) => {
+    if (!meshMap[meshName]) return console.warn("Unknown mesh:", meshName)
+    setRotation(meshMap[meshName], rotation)
+  }
+  window.setRotationMesh = setRotationMesh
+
+  const FPS = 30
+  const animationDurationMs = 300
+  const frames = (FPS/1000) * animationDurationMs
+  const frameDuration = animationDurationMs/frames
+  const applyPose = (pose) => {
+    const from = getCurrentPose()
+    const steps = Array(frames).fill().map((_, i) => {
+      const step = {}
+      
+      Object.entries(pose).forEach(([name, rotation]) => {
+        step[name] = {
+          x: getStep(from[name].x, rotation.x, i+1) ?? from[name].x,
+          y: getStep(from[name].y, rotation.y, i+1) ?? from[name].y,
+          z: getStep(from[name].z, rotation.z, i+1) ?? from[name].z
+        }
+      })
+
+      return step
+    })
+    
+    let i = 0
+    const intervalId = setInterval(() => {
+      Object.entries(steps[i++]).forEach(([name, rotation]) => {
+        setRotationMesh(name, rotation)
+      })
+
+      if(i === frames) clearInterval(intervalId)
+    }, frameDuration)
+  }
+  function getStep(from, to, i) {
+    const difference = (to ?? 0) - from
+    const increment = (difference / frames) * i
+    return from + increment
+  }
+
+  function getCurrentPose() {
+    return {
+      torso: getMeshRotation(torso),
+      shoulder_l: getMeshRotation(upper_arm_l),
+      elbow_l: getMeshRotation(lower_arm_l),
+      shoulder_r: getMeshRotation(upper_arm_r),
+      elbow_r: getMeshRotation(lower_arm_r),
+      hip_r: getMeshRotation(upper_leg_r),
+      knee_r: getMeshRotation(lower_leg_r),
+      hip_l: getMeshRotation(upper_leg_l),
+      knee_l: getMeshRotation(lower_leg_l)
+    }
+  }
+  function getMeshRotation(mesh) {
+    const { x, y, z } = mesh.rotation
+    return { x, y, z }
+  }
+
+  const poses = makePoses()
+  let flip = true
+  setInterval(() => {
+    if(flip) applyPose(poses.zero)
+    else applyPose(poses.rest)
+    flip = !flip
+  }, 1000)
+
+  return {
+    dude: torso,
+    applyPose
+  }
 }
 
-const scene = createScene()
-engine.runRenderLoop(() => {
-  scene.render()
-})
+function setRotation(mesh, rotation) {
+  mesh.rotation.x = rotation.x ?? mesh.rotation.x
+  mesh.rotation.y = rotation.y ?? mesh.rotation.y
+  mesh.rotation.z = rotation.z ?? mesh.rotation.z
+}
+function rotate(mesh, rotation) {
+  mesh.rotation.x += rotation.x ?? 0
+  mesh.rotation.y += rotation.y ?? 0
+  mesh.rotation.z += rotation.z ?? 0
+}
 
-window.addEventListener("resize", () => {
-  engine.resize()
-})
-
+/**
+ * torso { x: forward/back, y: rot, z: left/right }
+ * shoulder { x: rot, y: forward/back , z: up/down}
+ * elbow { y }
+ * hip { x: forward/back, y: rot, z: left/right }
+ * knee { x }
+ */
+function makePoses() {
+  return {
+    zero: {
+      torso:        { x: 0, y: 0, z: 0 },
+      shoulder_l:   { x: 0, y: 0, z: 0 },
+      elbow_l:      { y: 0 },
+      shoulder_r:   { x: 0, y: 0, z: 0 },
+      elbow_r:      { y: 0 },
+      hip_r:        { x: 0, y: 0, z: 0 },
+      knee_r:       { x: 0 },
+      hip_l:        { x: 0, y: 0, z: 0 },
+      knee_l:       { x: 0 },
+    },
+    rest: {
+      shoulder_l:   { x: -0.2, y: 0.4, z: -1.55 },
+      elbow_l:      { y: 0.4 },
+      shoulder_r:   { x: -0.2, y: -0.4, z: 1.55 },
+      elbow_r:      { y: -0.4 },
+      hip_l:        { x: 0.1, y: -0.2 },
+      knee_l:       { x: -0.1 },
+      hip_r:        { x: 0.1, y: 0.2 },
+      knee_r:       { x: -0.1 },
+    }
+  }
+}
