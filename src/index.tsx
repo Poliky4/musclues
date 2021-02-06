@@ -1,6 +1,7 @@
 import { h, render } from "preact";
 import { useEffect } from "preact/hooks";
 import { musclues } from "./script";
+import "./css/styles.css";
 
 const App = () => {
   useEffect(() => {
