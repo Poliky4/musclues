@@ -18,5 +18,8 @@
   "homepage": "https://github.com/Poliky4/musclues#readme",
   "devDependencies": {
     "parcel": "^1.12.4"
+  },
+  "dependencies": {
+    "babylonjs": "^4.2.0"
   }
 }
