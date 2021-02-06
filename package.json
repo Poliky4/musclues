@@ -1,0 +1,22 @@
+{
+  "name": "musclues",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel src/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Poliky4/musclues.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Poliky4/musclues/issues"
+  },
+  "homepage": "https://github.com/Poliky4/musclues#readme",
+  "devDependencies": {
+    "parcel": "^1.12.4"
+  }
+}
