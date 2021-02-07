@@ -1,7 +1,16 @@
-import { h, render } from "preact";
+import { render } from "preact";
+import styled from "styled-components";
 import { useEffect } from "preact/hooks";
 import { musclues } from "./script";
-import "./css/styles.css";
+import { Exercises } from "./components/Exercises";
+import { GlobalStyle } from "./globalStyle";
+import { Canvas } from "./components/Canvas";
+
+const StyledApp = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`;
 
 const App = () => {
   useEffect(() => {
@@ -9,13 +18,11 @@ const App = () => {
   }, []);
 
   return (
-    <div class="app">
-      <canvas></canvas>
-
-      <div class="ui">
-        <div class="excercises"></div>
-      </div>
-    </div>
+    <StyledApp>
+      <GlobalStyle />
+      <Canvas />
+      <Exercises />
+    </StyledApp>
   );
 };
 

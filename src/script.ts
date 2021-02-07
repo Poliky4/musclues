@@ -50,7 +50,7 @@ export const musclues = () => {
 
   function createScene() {
     const scene = new b.Scene(engine);
-    scene.debugLayer.show();
+    // scene.debugLayer.show();
 
     mats.transparent = makeTransparentMaterial(scene);
     mats.origin = makeOriginMaterial(scene);
