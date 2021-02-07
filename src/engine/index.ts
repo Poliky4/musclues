@@ -1,5 +1,8 @@
-import { Engine } from "babylonjs";
-import { createScene } from "./scene";
+import { Engine, Scene } from "babylonjs";
+import { makeCamera } from "./camera";
+import { makeGround } from "./ground";
+import { makeLights } from "./lights";
+import { makeModel } from "./model";
 
 export const musclues = () => {
   const canvas = document.getElementsByTagName("canvas")[0];
@@ -9,8 +12,13 @@ export const musclues = () => {
     stencil: true,
   });
 
-  const scene = createScene(engine, canvas);
+  const scene = new Scene(engine);
   // scene.debugLayer.show();
+
+  const { model, exercises } = makeModel(scene);
+  makeCamera(scene, canvas, model);
+  makeLights(scene, model);
+  makeGround(scene);
 
   engine.runRenderLoop(() => {
     scene.render();
@@ -19,4 +27,8 @@ export const musclues = () => {
   window.addEventListener("resize", () => {
     engine.resize();
   });
+
+  return {
+    exercises,
+  };
 };

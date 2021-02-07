@@ -395,9 +395,21 @@ export function makeModel(scene) {
     }, duration);
   }
 
+  const exercises = [
+    {
+      name: "Rest",
+      thing: () => applyPose(poses.rest),
+    },
+    {
+      name: "Wave",
+      thing: () => repeatReverse(poses.wave_end, poses.wave_start),
+    },
+  ];
+
   return {
     model: origin,
     applyPose,
     playAnimation,
+    exercises,
   };
 }

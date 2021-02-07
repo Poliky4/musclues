@@ -8,6 +8,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   html {
+    font-family: sans-serif;
     font-size: 10px;
   }
 

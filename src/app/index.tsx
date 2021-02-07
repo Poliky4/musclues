@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import { useEffect } from "preact/hooks";
-import { musclues } from "../engine";
-import { Exercises } from "../components/Exercises";
 import { Canvas } from "../components/Canvas";
+import { Exercises } from "../components/Exercises";
+import { MuscluesContextProvider } from "./muscluesContext";
 import { GlobalStyle } from "./globalStyle";
 import "./normalize.css";
 
@@ -12,16 +11,14 @@ const StyledApp = styled.div`
   height: 100%;
 `;
 
-export const App = () => {
-  useEffect(() => {
-    musclues();
-  }, []);
+export const App = () => (
+  <StyledApp>
+    <GlobalStyle />
 
-  return (
-    <StyledApp>
-      <GlobalStyle />
-      <Canvas />
+    <Canvas />
+
+    <MuscluesContextProvider>
       <Exercises />
-    </StyledApp>
-  );
-};
+    </MuscluesContextProvider>
+  </StyledApp>
+);
