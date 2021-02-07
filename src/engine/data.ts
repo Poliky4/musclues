@@ -34,7 +34,6 @@ export const origin_height =
  * knee { x }
  * foot { x }
  */
-
 export const poses = {
   zero: {
     height: { y: origin_height },

@@ -1,9 +1,17 @@
 import { Scene, StandardMaterial, Color3 } from "babylonjs";
 
-export const makeMaterials = (scene: Scene) => ({
-  transparent: makeTransparentMaterial(scene),
-  origin: makeOriginMaterial(scene),
-});
+let mats;
+
+export const makeMaterials = (scene: Scene) => {
+  if (!mats) {
+    mats = {
+      transparent: makeTransparentMaterial(scene),
+      origin: makeOriginMaterial(scene),
+    };
+  }
+
+  return mats;
+};
 
 function makeTransparentMaterial(scene: Scene) {
   const mat = new StandardMaterial("mat_transparent", scene);

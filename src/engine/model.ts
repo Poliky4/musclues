@@ -14,9 +14,12 @@ import {
   upper_arm_height,
   upper_leg_height,
 } from "./data";
+import { makeMaterials } from "./materials";
 import { rotate, setRotation } from "./utils";
 
-export function makeModel(scene, mats) {
+export function makeModel(scene) {
+  const mats = makeMaterials(scene);
+
   const origin = b.MeshBuilder.CreateBox(
     "origin",
     {
