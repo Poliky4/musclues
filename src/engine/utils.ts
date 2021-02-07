@@ -21,3 +21,5 @@ export function position(mesh, position) {
   mesh.position.y += position.y ?? 0;
   mesh.position.z += position.z ?? 0;
 }
+
+export const sum = (arr) => arr.reduce((a, b) => a + b, 0);

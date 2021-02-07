@@ -1,7 +1,7 @@
 import { render } from "preact";
 import styled from "styled-components";
 import { useEffect } from "preact/hooks";
-import { musclues } from "./script";
+import { musclues } from "./engine";
 import { Exercises } from "./components/Exercises";
 import { GlobalStyle } from "./globalStyle";
 import { Canvas } from "./components/Canvas";
