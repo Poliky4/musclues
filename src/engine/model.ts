@@ -1,23 +1,49 @@
 import * as b from "babylonjs";
-import {
-  foot_height,
-  hand_height,
-  head_height,
-  lower_arm_height,
-  lower_leg_height,
-  neck_height,
-  origin_height,
-  padding,
-  poses,
-  torso_height,
-  torso_width,
-  upper_arm_height,
-  upper_leg_height,
-} from "./data";
+import { Mesh, Scene } from "babylonjs";
 import { makeMaterials } from "./materials";
-import { rotate, setRotation } from "./utils";
+import { sum } from "./utils";
 
-export function makeModel(scene) {
+export interface Model {
+  origin: Mesh;
+  torso: Mesh;
+  shoulder_l: Mesh;
+  elbow_l: Mesh;
+  shoulder_r: Mesh;
+  elbow_r: Mesh;
+  hip_r: Mesh;
+  knee_r: Mesh;
+  foot_r: Mesh;
+  hip_l: Mesh;
+  knee_l: Mesh;
+  foot_l: Mesh;
+}
+
+export const foot_height = 1;
+export const lower_leg_height = 6;
+export const upper_leg_height = 6;
+export const torso_height = 10;
+export const torso_width = 6;
+export const neck_height = 0.5;
+export const head_height = 4;
+export const upper_arm_height = 4;
+export const lower_arm_height = 4;
+export const hand_height = 1;
+
+export const padding = 0.5;
+
+export const totalHeight = sum([
+  foot_height,
+  lower_leg_height,
+  upper_leg_height,
+  torso_height,
+  neck_height,
+  head_height,
+]);
+
+export const origin_height =
+  foot_height + lower_leg_height + upper_leg_height + padding * 3;
+
+export function makeModel(scene: Scene): Model {
   const mats = makeMaterials(scene);
 
   const origin = b.MeshBuilder.CreateBox(
@@ -279,8 +305,9 @@ export function makeModel(scene) {
   hand_r.parent = lower_arm_r;
   hand_r.position.x = -(lower_arm_height + 0.5 - 1.5);
 
-  const meshMap = {
-    torso: torso,
+  return {
+    origin,
+    torso,
     shoulder_l: upper_arm_l,
     elbow_l: lower_arm_l,
     shoulder_r: upper_arm_r,
@@ -291,125 +318,5 @@ export function makeModel(scene) {
     hip_l: upper_leg_l,
     knee_l: lower_leg_l,
     foot_l,
-  };
-
-  const rotateMesh = (meshName, rotation) => {
-    if (!meshMap[meshName]) return console.warn("Unknown mesh:", meshName);
-    rotate(meshMap[meshName], rotation);
-    return meshMap[meshName].rotation;
-  };
-  window.rotateMesh = rotateMesh;
-  const setRotationMesh = (meshName, rotation) => {
-    if (!meshMap[meshName]) return console.warn("Unknown mesh:", meshName);
-    setRotation(meshMap[meshName], rotation);
-  };
-  window.setRotationMesh = setRotationMesh;
-
-  const FPS = 30;
-  const animationDurationMs = 600;
-  const frames = (FPS / 1000) * animationDurationMs;
-  const frameDuration = animationDurationMs / frames;
-  const playAnimation = (to, from) => {
-    if (!from) from = getCurrentPose();
-
-    const steps = getSteps(from, to, frames);
-    playSteps(steps, frames, frameDuration);
-  };
-  function applyPose(pose) {
-    Object.entries(pose).forEach(([name, rotation]) => {
-      switch (name) {
-        case "height": {
-          origin.position.y = rotation.y;
-          break;
-        }
-        default: {
-          setRotationMesh(name, rotation);
-          break;
-        }
-      }
-    });
-  }
-  function playSteps(steps, frames, frameDuration) {
-    let i = 0;
-    const intervalId = setInterval(() => {
-      applyPose(steps[i++]);
-      if (i === frames) clearInterval(intervalId);
-    }, frameDuration);
-  }
-  function getSteps(from, to, frames) {
-    return Array(frames)
-      .fill()
-      .map((_, i) => {
-        const step = {};
-
-        Object.entries(to).forEach(([name, rotation]) => {
-          step[name] = {
-            x: getStep(from[name].x, rotation.x, i + 1) ?? from[name].x,
-            y: getStep(from[name].y, rotation.y, i + 1) ?? from[name].y,
-            z: getStep(from[name].z, rotation.z, i + 1) ?? from[name].z,
-          };
-        });
-
-        return step;
-      });
-  }
-  function getStep(from, to, i) {
-    const difference = (to ?? 0) - from;
-    const increment = (difference / frames) * i;
-    return from + increment;
-  }
-
-  function getCurrentPose() {
-    return {
-      height: { y: origin.position.y },
-      torso: getMeshRotation(torso),
-      shoulder_l: getMeshRotation(upper_arm_l),
-      elbow_l: getMeshRotation(lower_arm_l),
-      shoulder_r: getMeshRotation(upper_arm_r),
-      elbow_r: getMeshRotation(lower_arm_r),
-      hip_r: getMeshRotation(upper_leg_r),
-      knee_r: getMeshRotation(lower_leg_r),
-      foot_r: getMeshRotation(foot_r),
-      hip_l: getMeshRotation(upper_leg_l),
-      knee_l: getMeshRotation(lower_leg_l),
-      foot_l: getMeshRotation(foot_l),
-    };
-  }
-  function getMeshRotation(mesh) {
-    const { x, y, z } = mesh.rotation;
-    return { x, y, z };
-  }
-
-  applyPose(poses.rest);
-  // repeatReverse(poses.wave_end, poses.wave_start);
-  // applyPose(poses.squat_end)
-  // repeatReverse(poses.squat_end, poses.squat_start)
-  // repeatReverse(poses.pushup_start, poses.pushup_end)
-
-  function repeatReverse(start, end, duration = animationDurationMs) {
-    let flip = true;
-    setInterval(() => {
-      if (flip) playAnimation(start);
-      else playAnimation(end);
-      flip = !flip;
-    }, duration);
-  }
-
-  const exercises = [
-    {
-      name: "Rest",
-      thing: () => applyPose(poses.rest),
-    },
-    {
-      name: "Wave",
-      thing: () => repeatReverse(poses.wave_end, poses.wave_start),
-    },
-  ];
-
-  return {
-    model: origin,
-    applyPose,
-    playAnimation,
-    exercises,
   };
 }

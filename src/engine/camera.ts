@@ -1,5 +1,5 @@
 import { ArcRotateCamera, Mesh, Scene, Vector3 } from "babylonjs";
-import { totalHeight } from "./data";
+import { totalHeight } from "./model";
 
 export const makeCamera = (
   scene: Scene,

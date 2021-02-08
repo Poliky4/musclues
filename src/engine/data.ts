@@ -1,29 +1,4 @@
-import { sum } from "./utils";
-
-export const foot_height = 1;
-export const lower_leg_height = 6;
-export const upper_leg_height = 6;
-export const torso_height = 10;
-export const torso_width = 6;
-export const neck_height = 0.5;
-export const head_height = 4;
-export const upper_arm_height = 4;
-export const lower_arm_height = 4;
-export const hand_height = 1;
-
-export const padding = 0.5;
-
-export const totalHeight = sum([
-  foot_height,
-  lower_leg_height,
-  upper_leg_height,
-  torso_height,
-  neck_height,
-  head_height,
-]);
-
-export const origin_height =
-  foot_height + lower_leg_height + upper_leg_height + padding * 3;
+import { origin_height } from "./model";
 
 /**
  * height: { y: y pos for origin }

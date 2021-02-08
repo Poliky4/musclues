@@ -1,4 +1,5 @@
 import { Engine, Scene } from "babylonjs";
+import { makeAnimation } from "./animation";
 import { makeCamera } from "./camera";
 import { makeGround } from "./ground";
 import { makeLights } from "./lights";
@@ -15,9 +16,10 @@ export const musclues = () => {
   const scene = new Scene(engine);
   // scene.debugLayer.show();
 
-  const { model, exercises } = makeModel(scene);
-  makeCamera(scene, canvas, model);
-  makeLights(scene, model);
+  const model = makeModel(scene);
+  const exercises = makeAnimation(model);
+  makeCamera(scene, canvas, model.origin);
+  makeLights(scene, model.origin);
   makeGround(scene);
 
   engine.runRenderLoop(() => {
