@@ -1,14 +1,19 @@
 import { ComponentChildren, createContext } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { musclues } from "../engine";
+import { Exercise } from "../engine/animation";
 
 interface Props {
   children: ComponentChildren;
 }
 
-export const MuscluesContext = createContext(null);
+interface Context {
+  exercises: Exercise[];
+}
+
+export const MuscluesContext = createContext<Context>(null);
 export const MuscluesContextProvider = ({ children }: Props) => {
-  const [stuff, setStuff] = useState(null);
+  const [stuff, setStuff] = useState<Context>(null);
 
   useEffect(() => {
     const stuff = musclues();

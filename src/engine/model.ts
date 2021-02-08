@@ -1,21 +1,9 @@
-import * as b from "babylonjs";
-import { Mesh, Scene } from "babylonjs";
+import { Matrix, Mesh, MeshBuilder, Scene } from "babylonjs";
 import { makeMaterials } from "./materials";
 import { sum } from "./utils";
 
 export interface Model {
-  origin: Mesh;
-  torso: Mesh;
-  shoulder_l: Mesh;
-  elbow_l: Mesh;
-  shoulder_r: Mesh;
-  elbow_r: Mesh;
-  hip_r: Mesh;
-  knee_r: Mesh;
-  foot_r: Mesh;
-  hip_l: Mesh;
-  knee_l: Mesh;
-  foot_l: Mesh;
+  [key: string]: Mesh;
 }
 
 export const foot_height = 1;
@@ -46,7 +34,7 @@ export const origin_height =
 export function makeModel(scene: Scene): Model {
   const mats = makeMaterials(scene);
 
-  const origin = b.MeshBuilder.CreateBox(
+  const origin = MeshBuilder.CreateBox(
     "origin",
     {
       height: 0.01,
@@ -58,7 +46,7 @@ export function makeModel(scene: Scene): Model {
   origin.material = mats.origin;
   origin.position.y = origin_height;
 
-  const torso = b.MeshBuilder.CreateBox(
+  const torso = MeshBuilder.CreateBox(
     "torso",
     {
       height: torso_height,
@@ -69,9 +57,9 @@ export function makeModel(scene: Scene): Model {
   );
   torso.parent = origin;
   torso.material = mats.transparent;
-  torso.setPivotMatrix(b.Matrix.Translation(0, torso_height / 2, 0), false);
+  torso.setPivotMatrix(Matrix.Translation(0, torso_height / 2, 0), false);
 
-  const neck = b.MeshBuilder.CreateBox(
+  const neck = MeshBuilder.CreateBox(
     "neck",
     {
       height: neck_height,
@@ -84,19 +72,19 @@ export function makeModel(scene: Scene): Model {
   neck.parent = torso;
   neck.position.y = torso_height / 2 + neck_height / 2;
 
-  const head = b.Mesh.CreateSphere(
+  const head = Mesh.CreateSphere(
     "head",
     16,
     head_height,
     scene,
     false,
-    b.Mesh.FRONTSIDE
+    Mesh.FRONTSIDE
   );
   head.material = mats.transparent;
   head.parent = neck;
   head.position.y = head_height / 2 + neck_height / 2;
 
-  const upper_leg_l = b.MeshBuilder.CreateBox(
+  const upper_leg_l = MeshBuilder.CreateBox(
     "upper_leg_l",
     {
       height: upper_leg_height,
@@ -110,11 +98,11 @@ export function makeModel(scene: Scene): Model {
   upper_leg_l.position.x = torso_width / 2 - 1;
   upper_leg_l.position.y = -padding;
   upper_leg_l.setPivotMatrix(
-    b.Matrix.Translation(0, -upper_leg_height / 2, 0),
+    Matrix.Translation(0, -upper_leg_height / 2, 0),
     false
   );
 
-  const lower_leg_l = b.MeshBuilder.CreateBox(
+  const lower_leg_l = MeshBuilder.CreateBox(
     "lower_leg_l",
     {
       height: lower_leg_height,
@@ -127,11 +115,11 @@ export function makeModel(scene: Scene): Model {
   lower_leg_l.parent = upper_leg_l;
   lower_leg_l.position.y = -(upper_leg_height + 0.5 - lower_leg_height / 2);
   lower_leg_l.setPivotMatrix(
-    b.Matrix.Translation(0, -lower_leg_height / 2, 0),
+    Matrix.Translation(0, -lower_leg_height / 2, 0),
     false
   );
 
-  const foot_l = b.MeshBuilder.CreateBox(
+  const foot_l = MeshBuilder.CreateBox(
     "foot_l",
     {
       height: foot_height,
@@ -144,7 +132,7 @@ export function makeModel(scene: Scene): Model {
   foot_l.parent = lower_leg_l;
   foot_l.position.y = -(lower_leg_height / 2 + 1);
   foot_l.setPivotMatrix(
-    b.Matrix.Translation(
+    Matrix.Translation(
       0,
       0,
       -(5 / 2 - 1) // -1 = half leg thickness
@@ -152,7 +140,7 @@ export function makeModel(scene: Scene): Model {
     false
   );
 
-  const upper_leg_r = b.MeshBuilder.CreateBox(
+  const upper_leg_r = MeshBuilder.CreateBox(
     "upper_leg_r",
     {
       height: upper_leg_height,
@@ -166,11 +154,11 @@ export function makeModel(scene: Scene): Model {
   upper_leg_r.position.x = -(torso_width / 2 - 1);
   upper_leg_r.position.y = -padding;
   upper_leg_r.setPivotMatrix(
-    b.Matrix.Translation(0, -upper_leg_height / 2, 0),
+    Matrix.Translation(0, -upper_leg_height / 2, 0),
     false
   );
 
-  const lower_leg_r = b.MeshBuilder.CreateBox(
+  const lower_leg_r = MeshBuilder.CreateBox(
     "lower_leg_r",
     {
       height: lower_leg_height,
@@ -183,11 +171,11 @@ export function makeModel(scene: Scene): Model {
   lower_leg_r.parent = upper_leg_r;
   lower_leg_r.position.y = -(upper_leg_height + 0.5 - lower_leg_height / 2);
   lower_leg_r.setPivotMatrix(
-    b.Matrix.Translation(0, -lower_leg_height / 2, 0),
+    Matrix.Translation(0, -lower_leg_height / 2, 0),
     false
   );
 
-  const foot_r = b.MeshBuilder.CreateBox(
+  const foot_r = MeshBuilder.CreateBox(
     "foot_r",
     {
       height: foot_height,
@@ -200,7 +188,7 @@ export function makeModel(scene: Scene): Model {
   foot_r.parent = lower_leg_r;
   foot_r.position.y = -(lower_leg_height / 2 + 1);
   foot_r.setPivotMatrix(
-    b.Matrix.Translation(
+    Matrix.Translation(
       0,
       0,
       -(5 / 2 - 1) // -1 = half leg thickness
@@ -208,7 +196,7 @@ export function makeModel(scene: Scene): Model {
     false
   );
 
-  const upper_arm_l = b.MeshBuilder.CreateBox(
+  const upper_arm_l = MeshBuilder.CreateBox(
     "upper_arm_l",
     {
       height: 1.5,
@@ -223,11 +211,11 @@ export function makeModel(scene: Scene): Model {
   upper_arm_l.position.x =
     torso_width / 2 + upper_arm_height / 2 + 0.5 - upper_arm_height / 2;
   upper_arm_l.setPivotMatrix(
-    b.Matrix.Translation(upper_arm_height / 2, 0, 0),
+    Matrix.Translation(upper_arm_height / 2, 0, 0),
     false
   );
 
-  const lower_arm_l = b.MeshBuilder.CreateBox(
+  const lower_arm_l = MeshBuilder.CreateBox(
     "lower_arm_l",
     {
       height: 1.5,
@@ -240,11 +228,11 @@ export function makeModel(scene: Scene): Model {
   lower_arm_l.parent = upper_arm_l;
   lower_arm_l.position.x = upper_arm_height + 0.5 - lower_arm_height / 2;
   lower_arm_l.setPivotMatrix(
-    b.Matrix.Translation(lower_arm_height / 2, 0, 0),
+    Matrix.Translation(lower_arm_height / 2, 0, 0),
     false
   );
 
-  const hand_l = b.MeshBuilder.CreateBox(
+  const hand_l = MeshBuilder.CreateBox(
     "hand_l",
     {
       height: 1.5,
@@ -257,7 +245,7 @@ export function makeModel(scene: Scene): Model {
   hand_l.parent = lower_arm_l;
   hand_l.position.x = lower_arm_height + 0.5 - 1.5;
 
-  const upper_arm_r = b.MeshBuilder.CreateBox(
+  const upper_arm_r = MeshBuilder.CreateBox(
     "upper_arm_r",
     {
       height: 1.5,
@@ -271,11 +259,11 @@ export function makeModel(scene: Scene): Model {
   upper_arm_r.position.y = torso_height / 2 - 0.75;
   upper_arm_r.position.x = -(torso_width / 2 + 0.5);
   upper_arm_r.setPivotMatrix(
-    b.Matrix.Translation(-upper_arm_height / 2, 0, 0),
+    Matrix.Translation(-upper_arm_height / 2, 0, 0),
     false
   );
 
-  const lower_arm_r = b.MeshBuilder.CreateBox(
+  const lower_arm_r = MeshBuilder.CreateBox(
     "lower_arm_r",
     {
       height: 1.5,
@@ -288,11 +276,11 @@ export function makeModel(scene: Scene): Model {
   lower_arm_r.parent = upper_arm_r;
   lower_arm_r.position.x = -(upper_arm_height + 0.5 - lower_arm_height / 2);
   lower_arm_r.setPivotMatrix(
-    b.Matrix.Translation(-lower_arm_height / 2, 0, 0),
+    Matrix.Translation(-lower_arm_height / 2, 0, 0),
     false
   );
 
-  const hand_r = b.MeshBuilder.CreateBox(
+  const hand_r = MeshBuilder.CreateBox(
     "hand_r",
     {
       height: 1.5,

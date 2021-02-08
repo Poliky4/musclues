@@ -18,7 +18,7 @@ export const musclues = () => {
 
   const model = makeModel(scene);
   const exercises = makeAnimation(model);
-  makeCamera(scene, canvas, model.origin);
+  makeCamera(scene, canvas);
   makeLights(scene, model.origin);
   makeGround(scene);
 

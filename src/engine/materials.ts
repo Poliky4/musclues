@@ -1,7 +1,10 @@
-import { Scene, StandardMaterial, Color3 } from "babylonjs";
+import { Scene, StandardMaterial, Color3, Material } from "babylonjs";
 
-let mats;
+interface Mats {
+  [key: string]: Material;
+}
 
+let mats: Mats;
 export const makeMaterials = (scene: Scene) => {
   if (!mats) {
     mats = {

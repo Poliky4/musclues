@@ -1,11 +1,7 @@
-import { ArcRotateCamera, Mesh, Scene, Vector3 } from "babylonjs";
+import { ArcRotateCamera, Scene, Vector3 } from "babylonjs";
 import { totalHeight } from "./model";
 
-export const makeCamera = (
-  scene: Scene,
-  canvas: HTMLCanvasElement,
-  model: Mesh
-) => {
+export const makeCamera = (scene: Scene, canvas: HTMLCanvasElement) => {
   const camera = new ArcRotateCamera(
     "camera",
     0,
@@ -16,7 +12,6 @@ export const makeCamera = (
   );
   camera.setPosition(new Vector3(0, totalHeight / 2, -40));
   camera.attachControl(canvas, true);
-  camera.lockTarget = model;
 
   return camera;
 };

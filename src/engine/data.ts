@@ -1,4 +1,13 @@
 import { origin_height } from "./model";
+import { Vector } from "./types";
+
+export interface Pose {
+  [key: string]: Vector;
+}
+
+export interface Poses {
+  [key: string]: Pose;
+}
 
 /**
  * height: { y: y pos for origin }
@@ -9,7 +18,7 @@ import { origin_height } from "./model";
  * knee { x }
  * foot { x }
  */
-export const poses = {
+export const poses: Poses = {
   zero: {
     height: { y: origin_height },
     torso: { x: 0, y: 0, z: 0 },
