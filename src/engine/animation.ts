@@ -24,11 +24,15 @@ export function makeAnimation(model: Model): Exercise[] {
   return [
     {
       name: "Rest",
-      thing: () => applyPose(model, poses.rest),
+      thing: () => playAnimation(model, poses.rest),
     },
     {
       name: "Wave",
       thing: () => repeatReverse(model, poses.wave_end, poses.wave_start),
+    },
+    {
+      name: "Stop",
+      thing: stopAnimation,
     },
   ];
 }
@@ -119,6 +123,7 @@ function getMeshRotation(mesh: Mesh) {
   return { x, y, z };
 }
 
+let animationId: string | undefined;
 function repeatReverse(
   model: Model,
   start: Pose,
@@ -126,9 +131,16 @@ function repeatReverse(
   duration = animationDurationMs
 ) {
   let flip = true;
-  setInterval(() => {
+  animationId = setInterval(() => {
     if (flip) playAnimation(model, start);
     else playAnimation(model, end);
     flip = !flip;
   }, duration);
+}
+
+function stopAnimation() {
+  if (animationId) {
+    clearInterval(animationId);
+    animationId = undefined;
+  }
 }
