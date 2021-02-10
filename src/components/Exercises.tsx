@@ -7,7 +7,7 @@ export const Exercises = () => {
 
   return (
     <StyledExercises>
-      <StyledTitle>Exercises</StyledTitle>
+      {/* <StyledTitle>Exercises</StyledTitle> */}
 
       <StyledList>
         {exercises.map(({ name, thing }) => (
@@ -21,11 +21,11 @@ export const Exercises = () => {
 const StyledExercises = styled.div`
   position: absolute;
   height: 80vh;
-  width: 24rem;
+  width: 12rem;
   right: 0;
   top: 10vh;
 
-  background: grey;
+  /* background: rgba(100, 100, 100, 0.7); */
 `;
 
 const StyledTitle = styled.h1`
@@ -34,6 +34,11 @@ const StyledTitle = styled.h1`
 `;
 
 const StyledList = styled.div`
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: flex-end;
   padding: 2rem;
 `;
 
@@ -45,4 +50,6 @@ const StyledListItem = styled.div`
   border-radius: 0.5rem;
   cursor: pointer;
   margin-bottom: 1rem;
+  user-select: none;
+  background-color: grey;
 `;
