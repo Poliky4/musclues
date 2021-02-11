@@ -1,4 +1,4 @@
-import { Matrix, Mesh, MeshBuilder, Scene } from "babylonjs";
+import { Mesh, Matrix, MeshBuilder, Scene } from "babylonjs";
 import { makeMaterials } from "./materials";
 import { sum } from "./utils";
 
@@ -45,6 +45,7 @@ export function makeModel(scene: Scene): Model {
   );
   origin.material = mats.origin;
   origin.position.y = origin_height;
+  origin.isPickable = false;
 
   const torso = MeshBuilder.CreateBox(
     "torso",
@@ -71,6 +72,7 @@ export function makeModel(scene: Scene): Model {
   neck.material = mats.transparent;
   neck.parent = torso;
   neck.position.y = torso_height / 2 + neck_height / 2;
+  neck.isPickable = false;
 
   const head = Mesh.CreateSphere(
     "head",
@@ -83,9 +85,10 @@ export function makeModel(scene: Scene): Model {
   head.material = mats.transparent;
   head.parent = neck;
   head.position.y = head_height / 2 + neck_height / 2;
+  head.isPickable = false;
 
   const upper_leg_l = MeshBuilder.CreateBox(
-    "upper_leg_l",
+    "hip_l",
     {
       height: upper_leg_height,
       width: 2,
@@ -103,7 +106,7 @@ export function makeModel(scene: Scene): Model {
   );
 
   const lower_leg_l = MeshBuilder.CreateBox(
-    "lower_leg_l",
+    "knee_l",
     {
       height: lower_leg_height,
       width: 2,
@@ -139,9 +142,10 @@ export function makeModel(scene: Scene): Model {
     ),
     false
   );
+  foot_l.isPickable = false;
 
   const upper_leg_r = MeshBuilder.CreateBox(
-    "upper_leg_r",
+    "hip_r",
     {
       height: upper_leg_height,
       width: 2,
@@ -159,7 +163,7 @@ export function makeModel(scene: Scene): Model {
   );
 
   const lower_leg_r = MeshBuilder.CreateBox(
-    "lower_leg_r",
+    "knee_r",
     {
       height: lower_leg_height,
       width: 2,
@@ -195,9 +199,10 @@ export function makeModel(scene: Scene): Model {
     ),
     false
   );
+  foot_r.isPickable = false;
 
   const upper_arm_l = MeshBuilder.CreateBox(
-    "upper_arm_l",
+    "shoulder_l",
     {
       height: 1.5,
       width: upper_arm_height,
@@ -216,7 +221,7 @@ export function makeModel(scene: Scene): Model {
   );
 
   const lower_arm_l = MeshBuilder.CreateBox(
-    "lower_arm_l",
+    "elbow_l",
     {
       height: 1.5,
       width: lower_arm_height,
@@ -244,9 +249,10 @@ export function makeModel(scene: Scene): Model {
   hand_l.material = mats.transparent;
   hand_l.parent = lower_arm_l;
   hand_l.position.x = lower_arm_height + 0.5 - 1.5;
+  hand_l.isPickable = false;
 
   const upper_arm_r = MeshBuilder.CreateBox(
-    "upper_arm_r",
+    "shoulder_r",
     {
       height: 1.5,
       width: upper_arm_height,
@@ -264,7 +270,7 @@ export function makeModel(scene: Scene): Model {
   );
 
   const lower_arm_r = MeshBuilder.CreateBox(
-    "lower_arm_r",
+    "elbow_r",
     {
       height: 1.5,
       width: lower_arm_height,
@@ -292,6 +298,7 @@ export function makeModel(scene: Scene): Model {
   hand_r.material = mats.transparent;
   hand_r.parent = lower_arm_r;
   hand_r.position.x = -(lower_arm_height + 0.5 - 1.5);
+  hand_r.isPickable = false;
 
   return {
     origin,

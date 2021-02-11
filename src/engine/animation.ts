@@ -7,6 +7,7 @@ import { setRotation } from "./utils";
 export interface Exercise {
   name: string;
   thing: () => void;
+  bodyParts: string[];
 }
 
 const FPS = 30;
@@ -25,14 +26,47 @@ export function makeAnimation(model: Model): Exercise[] {
     {
       name: "Rest",
       thing: () => playAnimation(model, poses.rest),
-    },
-    {
-      name: "Wave",
-      thing: () => repeatReverse(model, poses.wave_end, poses.wave_start),
+      bodyParts: [
+        "torso",
+        "shoulder_l",
+        "elbow_l",
+        "shoulder_r",
+        "elbow_r",
+        "hip_r",
+        "knee_r",
+        "hip_l",
+        "knee_l",
+      ],
     },
     {
       name: "Stop",
       thing: stopAnimation,
+      bodyParts: [
+        "torso",
+        "shoulder_l",
+        "elbow_l",
+        "shoulder_r",
+        "elbow_r",
+        "hip_r",
+        "knee_r",
+        "hip_l",
+        "knee_l",
+      ],
+    },
+    {
+      name: "Wave",
+      thing: () => repeatReverse(model, poses.wave_end, poses.wave_start),
+      bodyParts: ["shoulder_l", "elbow_l"],
+    },
+    {
+      name: "Squat",
+      thing: () => repeatReverse(model, poses.squat_start, poses.squat_end),
+      bodyParts: ["torso", "hip_r", "hip_l"],
+    },
+    {
+      name: "Push up",
+      thing: () => repeatReverse(model, poses.pushup_start, poses.pushup_end),
+      bodyParts: ["torso", "shoulder_l", "shoulder_r"],
     },
   ];
 }

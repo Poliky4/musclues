@@ -1,14 +1,13 @@
-import { useContext } from "preact/hooks";
 import styled from "styled-components";
-import { MuscluesContext } from "../app/muscluesContext";
+import { Exercise } from "../engine/animation";
 
-export const Exercises = () => {
-  const { exercises } = useContext(MuscluesContext);
+interface Props {
+  exercises: Exercise[];
+}
 
+export const Exercises = ({ exercises }: Props) => {
   return (
     <StyledExercises>
-      {/* <StyledTitle>Exercises</StyledTitle> */}
-
       <StyledList>
         {exercises.map(({ name, thing }) => (
           <StyledListItem onClick={thing}>{name}</StyledListItem>
@@ -24,13 +23,7 @@ const StyledExercises = styled.div`
   width: 12rem;
   right: 0;
   top: 10vh;
-
-  /* background: rgba(100, 100, 100, 0.7); */
-`;
-
-const StyledTitle = styled.h1`
-  text-align: center;
-  padding: 2rem;
+  pointer-events: none;
 `;
 
 const StyledList = styled.div`
@@ -52,4 +45,5 @@ const StyledListItem = styled.div`
   margin-bottom: 1rem;
   user-select: none;
   background-color: grey;
+  pointer-events: all;
 `;

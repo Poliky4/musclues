@@ -1,11 +1,38 @@
 import { Engine, Scene } from "babylonjs";
-import { makeAnimation } from "./animation";
+import { useEffect, useState } from "preact/hooks";
+import { Exercise, makeAnimation } from "./animation";
 import { makeCamera } from "./camera";
 import { makeGround } from "./ground";
 import { makeLights } from "./lights";
 import { makeModel } from "./model";
 
-export const musclues = () => {
+export const useMusclues = (onClick: (meshName?: string) => void) => {
+  const [scene, setScene] = useState<Scene>(null);
+  const [allExercises, setAllExercises] = useState<Exercise[]>([]);
+
+  useEffect(() => {
+    const { scene, exercises } = musclues();
+
+    setScene(scene);
+    setAllExercises(exercises);
+  }, []);
+
+  useEffect(() => {
+    if (!scene) return;
+
+    scene.onPointerPick = (e, pick) => {
+      if (pick.hit) {
+        onClick(pick.pickedMesh.name);
+      }
+    };
+  }, [onClick]);
+
+  return {
+    allExercises,
+  };
+};
+
+const musclues = () => {
   const canvas = document.getElementsByTagName("canvas")[0];
 
   const engine = new Engine(canvas, true, {
@@ -31,6 +58,7 @@ export const musclues = () => {
   });
 
   return {
+    scene,
     exercises,
   };
 };

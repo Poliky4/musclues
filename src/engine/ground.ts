@@ -10,4 +10,5 @@ export const makeGround = (scene: Scene) => {
     scene
   );
   ground.receiveShadows = true;
+  ground.isPickable = false;
 };
