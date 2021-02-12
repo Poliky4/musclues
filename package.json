@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "parcel index.html",
-    "build": "npm run clean && parcel build index.html --public-url ./ --no-scope-hoist",
+    "build": "npm run clean && parcel build index.html --public-url ./",
     "postbuild": "workbox generateSW",
     "serve": "serve dist",
     "clean": "rimraf dist && rimraf .parcel-cache"
@@ -21,7 +21,6 @@
   "homepage": "https://github.com/Poliky4/musclues#readme",
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "^7.12.16",
-    "@babel/preset-env": "^7.12.16",
     "@babel/preset-typescript": "^7.12.16",
     "@parcel/optimizer-cssnano": "^2.0.0-nightly.587",
     "@parcel/optimizer-htmlnano": "^2.0.0-nightly.587",
