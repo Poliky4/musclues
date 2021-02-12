@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "parcel index.html",
-    "build": "npm run clean && parcel build index.html --public-url ./",
+    "build": "npm run clean && parcel build index.html --public-url ./ --no-scope-hoist",
     "postbuild": "workbox generateSW",
     "serve": "serve dist",
     "clean": "rimraf dist && rimraf .parcel-cache"

@@ -5,18 +5,6 @@ interface Props {
   exercises: Exercise[];
 }
 
-export const Exercises = ({ exercises }: Props) => {
-  return (
-    <StyledExercises>
-      <StyledList>
-        {exercises.map(({ name, thing }) => (
-          <StyledListItem onClick={thing}>{name}</StyledListItem>
-        ))}
-      </StyledList>
-    </StyledExercises>
-  );
-};
-
 const StyledExercises = styled.div`
   position: absolute;
   height: 80vh;
@@ -47,3 +35,15 @@ const StyledListItem = styled.div`
   background-color: grey;
   pointer-events: all;
 `;
+
+export const Exercises = ({ exercises }: Props) => {
+  return (
+    <StyledExercises>
+      <StyledList>
+        {exercises.map(({ name, thing }) => (
+          <StyledListItem onClick={thing}>{name}</StyledListItem>
+        ))}
+      </StyledList>
+    </StyledExercises>
+  );
+};
