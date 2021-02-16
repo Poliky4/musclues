@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Exercise } from "../engine/animation";
+import { Button } from "./Button";
 
 interface Props {
   exercises: Exercise[];
@@ -23,24 +24,15 @@ const StyledList = styled.div`
   padding: 2rem;
 `;
 
-const StyledListItem = styled.div`
-  padding: 1rem;
-  font-size: 1.8rem;
-  text-align: center;
-  border: 1px solid black;
-  border-radius: 0.5rem;
-  cursor: pointer;
+const StyledListItem = styled(Button)`
   margin-bottom: 1rem;
-  user-select: none;
-  background-color: grey;
-  pointer-events: all;
 `;
 
 export const Exercises = ({ exercises }: Props) => {
   return (
     <StyledExercises>
       <StyledList>
-        {exercises.map(({ name, thing }) => (
+        {exercises?.map(({ name, thing }) => (
           <StyledListItem onClick={thing}>{name}</StyledListItem>
         ))}
       </StyledList>

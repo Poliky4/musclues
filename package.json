@@ -46,6 +46,7 @@
   "dependencies": {
     "babylonjs": "^4.2.0",
     "preact": "^10.5.12",
+    "preact-router": "^3.2.1",
     "styled-components": "5.2.1"
   },
   "alias": {

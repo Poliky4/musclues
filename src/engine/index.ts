@@ -12,6 +12,7 @@ export const useMusclues = (onClick: (meshName?: string) => void) => {
 
   useEffect(() => {
     const { scene, exercises } = musclues();
+    scene.activeCamera.storeState();
 
     setScene(scene);
     setAllExercises(exercises);
@@ -20,15 +21,26 @@ export const useMusclues = (onClick: (meshName?: string) => void) => {
   useEffect(() => {
     if (!scene) return;
 
-    scene.onPointerPick = (e, pick) => {
+    scene.onPointerPick = (_, pick) => {
       if (pick.hit) {
         onClick(pick.pickedMesh.name);
       }
     };
   }, [onClick]);
 
+  const resetCamera = () => {
+    scene?.activeCamera.restoreState();
+    const stop = allExercises.find((e) => e.name === "Stop");
+    const rest = allExercises.find((e) => e.name === "Rest");
+    stop?.thing();
+    setTimeout(() => {
+      rest?.thing();
+    }, 999);
+  };
+
   return {
     allExercises,
+    resetCamera,
   };
 };
 

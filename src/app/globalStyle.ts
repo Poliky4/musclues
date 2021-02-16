@@ -5,6 +5,7 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    outline: none;
   }
 
   html {
@@ -16,5 +17,11 @@ export const GlobalStyle = createGlobalStyle`
   body {
     height: 100%;
     background-color: black;
+    overflow: hidden;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
   }
 `;
