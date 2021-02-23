@@ -1,5 +1,5 @@
 import { Engine, Scene } from "babylonjs";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { Exercise, makeAnimation } from "./animation";
 import { makeCamera } from "./camera";
 import { makeGround } from "./ground";
@@ -9,11 +9,14 @@ import { makeModel } from "./model";
 export const useMusclues = (onClick: (meshName?: string) => void) => {
   const [scene, setScene] = useState<Scene>(null);
   const [allExercises, setAllExercises] = useState<Exercise[]>([]);
+  const switchCameraRef = useRef<() => void>();
+  const switchCamera = () => switchCameraRef.current?.();
 
   useEffect(() => {
-    const { scene, exercises } = musclues();
+    const { scene, exercises, switchCamera } = musclues();
     scene.activeCamera.storeState();
 
+    switchCameraRef.current = switchCamera;
     setScene(scene);
     setAllExercises(exercises);
   }, []);
@@ -26,10 +29,9 @@ export const useMusclues = (onClick: (meshName?: string) => void) => {
         onClick(pick.pickedMesh.name);
       }
     };
-  }, [onClick]);
+  }, [scene, onClick]);
 
-  const resetCamera = () => {
-    scene?.activeCamera.restoreState();
+  const resetModel = () => {
     const stop = allExercises.find((e) => e.name === "Stop");
     const rest = allExercises.find((e) => e.name === "Rest");
     stop?.thing();
@@ -40,7 +42,8 @@ export const useMusclues = (onClick: (meshName?: string) => void) => {
 
   return {
     allExercises,
-    resetCamera,
+    resetModel,
+    switchCamera
   };
 };
 
@@ -57,7 +60,10 @@ const musclues = () => {
 
   const model = makeModel(scene);
   const exercises = makeAnimation(model);
-  makeCamera(scene, canvas);
+  const { primaryCamera, secondaryCamera, switchCamera } = makeCamera({
+    scene,
+    canvas,
+  });
   makeLights(scene, model.origin);
   makeGround(scene);
 
@@ -72,5 +78,6 @@ const musclues = () => {
   return {
     scene,
     exercises,
+    switchCamera,
   };
 };

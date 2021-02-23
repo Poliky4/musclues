@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { getCurrentUrl, Route, Router } from "preact-router";
 import styled from "styled-components";
 import { Canvas } from "../components/Canvas";
@@ -12,18 +12,25 @@ import { HomeLink } from "../components/HomeLink";
 import "./normalize.css";
 
 export const App = () => {
-  const { allExercises, resetCamera } = useMusclues(onClick);
+  const { allExercises, resetModel, switchCamera } = useMusclues(onClick);
   const [exercises, setExercises] = useState<Exercise[]>([]); // move to context?
+  const previousPathRef = useRef(getCurrentUrl());
 
   function onClick(meshName: string) {
     setExercises(allExercises.filter((e) => e.bodyParts.includes(meshName)));
   }
 
-  const previousPath = getCurrentUrl();
   const onRouteChange = () => {
+    const previousPath = previousPathRef.current;
     const currentPath = getCurrentUrl();
+    previousPathRef.current = currentPath;
+
     if (currentPath !== previousPath) {
-      resetCamera();
+      resetModel();
+
+      if (currentPath === "/explore" || previousPath === "/explore") {
+        switchCamera();
+      }
     }
   };
 
