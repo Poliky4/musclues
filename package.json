@@ -6,6 +6,7 @@
     "start": "parcel index.html",
     "build": "npm run clean && parcel build index.html --public-url ./",
     "postbuild": "workbox generateSW",
+    "deploy": "push-dir --dir=dist",
     "serve": "serve dist",
     "clean": "rimraf dist && rimraf .parcel-cache"
   },
@@ -38,6 +39,7 @@
     "parcel": "^2.0.0-nightly.585",
     "parcel-plugin-bundle-visualiser": "^1.2.0",
     "postcss": "^8.2.6",
+    "push-dir": "^0.4.1",
     "rimraf": "^3.0.2",
     "serve": "^11.3.2",
     "typescript": "^4.1.5",
