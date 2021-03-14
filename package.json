@@ -6,7 +6,7 @@
     "start": "parcel index.html",
     "build": "npm run clean && parcel build index.html --public-url ./",
     "postbuild": "workbox generateSW",
-    "deploy": "push-dir --dir=dist",
+    "deploy": "push-dir --dir=dist --branch=release",
     "serve": "serve dist",
     "clean": "rimraf dist && rimraf .parcel-cache"
   },
